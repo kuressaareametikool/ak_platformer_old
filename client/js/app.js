@@ -42,6 +42,7 @@ this.setup = function() {
   }
   
    tiles = new jaws.TileMap({size: [50,50], cell_size: [32,32]})
+   collect = new jaws.TileMap({size: [50,50], cell_size: [32,32]})
   
    var rows = level.map.length / level.width
 
@@ -52,7 +53,11 @@ this.setup = function() {
        var y = i * 32
        if (elements[level.map[el]].image) {
          var tile = new jaws.Sprite({image: elements[level.map[el]].image, x: x, y: y, type: elements[level.map[el]].type})
-         tiles.pushToCell(j, i, tile)
+         if (elements[level.map[el]].type == 'collect') {
+           collect.pushToCell(j, i, tile)
+         } else {
+           tiles.pushToCell(j, i, tile)
+         }
         }
      };
    };
@@ -63,14 +68,13 @@ this.setup = function() {
    
    player.move = function() {
      this.x = this.x + this.vx
-     if (tiles.atRect(player.rect()).length > 0 && !tiles.atRect(player.rect())[0].options.type) { 
+     if (tiles.atRect(player.rect()).length > 0) { 
        this.x = this.x - this.vx 
       }
      this.vx = 0
      
-     // y
      this.y = this.y + this.vy
-    if (tiles.atRect(player.rect()).length > 0) { 
+     if (tiles.atRect(player.rect()).length > 0) {
        this.y = this.y - this.vy 
      }
      this.vy = 0      
@@ -95,10 +99,11 @@ this.setup = function() {
    jaws.clear()
    tiles.all().forEach(function(tile) {
     tile.draw()
-    tile.rect().draw()
+   })
+   collect.all().forEach(function(tile) {
+    tile.draw()
    })
    player.draw()
-   player.rect().draw()
  }
 }
 
