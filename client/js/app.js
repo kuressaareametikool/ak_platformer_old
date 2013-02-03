@@ -37,12 +37,12 @@ this.setup = function() {
     },
     3 : {
       'image': 'images/mushroom.png',
-      'type': 'collect'      
+      'layer': 'collectables'      
     }
   }
   
-   tiles = new jaws.TileMap({size: [50,50], cell_size: [32,32]})
-   collect = new jaws.TileMap({size: [50,50], cell_size: [32,32]})
+   walls = new jaws.TileMap({size: [50,50], cell_size: [32,32]})
+   collectables = new jaws.TileMap({size: [50,50], cell_size: [32,32]})
   
    var rows = level.map.length / level.width
 
@@ -53,10 +53,10 @@ this.setup = function() {
        var y = i * 32
        if (elements[level.map[el]].image) {
          var tile = new jaws.Sprite({image: elements[level.map[el]].image, x: x, y: y, type: elements[level.map[el]].type})
-         if (elements[level.map[el]].type == 'collect') {
-           collect.pushToCell(j, i, tile)
+         if (elements[level.map[el]].layer == 'collectables') {
+           collectables.pushToCell(j, i, tile)
          } else {
-           tiles.pushToCell(j, i, tile)
+           walls.pushToCell(j, i, tile)
          }
         }
      };
@@ -68,13 +68,13 @@ this.setup = function() {
    
    player.move = function() {
      this.x = this.x + this.vx
-     if (tiles.atRect(player.rect()).length > 0) { 
+     if (walls.atRect(player.rect()).length > 0) { 
        this.x = this.x - this.vx 
       }
      this.vx = 0
      
      this.y = this.y + this.vy
-     if (tiles.atRect(player.rect()).length > 0) {
+     if (walls.atRect(player.rect()).length > 0) {
        this.y = this.y - this.vy 
      }
      this.vy = 0      
@@ -97,10 +97,10 @@ this.setup = function() {
 
  this.draw = function() {
    jaws.clear()
-   tiles.all().forEach(function(tile) {
+   walls.all().forEach(function(tile) {
     tile.draw()
    })
-   collect.all().forEach(function(tile) {
+   collectables.all().forEach(function(tile) {
     tile.draw()
    })
    player.draw()
