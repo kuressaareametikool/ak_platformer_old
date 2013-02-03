@@ -36,7 +36,8 @@ this.setup = function() {
       'image': 'images/earth_2.png'
     },
     3 : {
-      'image': 'images/mushroom.png'
+      'image': 'images/mushroom.png',
+      'type': 'collect'      
     }
   }
   
@@ -50,28 +51,26 @@ this.setup = function() {
        var x = j * 32
        var y = i * 32
        if (elements[level.map[el]].image) {
-         var tile = new jaws.Sprite({image: elements[level.map[el]].image, x: x, y: y})
+         var tile = new jaws.Sprite({image: elements[level.map[el]].image, x: x, y: y, type: elements[level.map[el]].type})
          tiles.pushToCell(j, i, tile)
         }
      };
    };
-   
-   this.player = new jaws.Sprite({image: "images/cat.png", x: 70, y: 30, anchor: "center_bottom"})
+   this.player = new jaws.Sprite({image: "images/cat.png", x: 70, y: 30, anchor: "center"})
    
    player.vx = 0
    player.vy = 0
    
    player.move = function() {
      this.x = this.x + this.vx
-     if (tiles.atRect(player.rect()).length > 0) { 
+     if (tiles.atRect(player.rect()).length > 0 && !tiles.atRect(player.rect())[0].options.type) { 
        this.x = this.x - this.vx 
-       console.log(tiles.atRect(player.rect()))
       }
      this.vx = 0
      
      // y
      this.y = this.y + this.vy
-     if (tiles.atRect(player.rect()).length > 0) { 
+    if (tiles.atRect(player.rect()).length > 0) { 
        this.y = this.y - this.vy 
      }
      this.vy = 0      
@@ -85,25 +84,23 @@ this.setup = function() {
    if(jaws.pressed("right") || jaws.socket == 'right') { player.vx = 2; }
    if(jaws.pressed("up") || jaws.socket == 'up') { player.vy = -6 }
    if(jaws.pressed("down") || jaws.socket == 'down') { player.vy = 2; }
-   
-   if(jaws.socket == 'button') jaws.switchGameState(PlayState())
-   
    jaws.socket = null
    
    player.vy = player.vy + 3
    
-   player.move()
-   
+   player.move()  
  }
 
  this.draw = function() {
    jaws.clear()
    tiles.all().forEach(function(tile) {
-     tile.draw()
-   })    
+    tile.draw()
+    tile.rect().draw()
+   })
    player.draw()
+   player.rect().draw()
  }
 }
 
-jaws.start(playState(), {width: 512, height: 512})
+jaws.start(playState())
 
