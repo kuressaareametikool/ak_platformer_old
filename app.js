@@ -43,13 +43,9 @@ board.on("ready", function() {
     });
 
     button1.on("read", function(err, val) {
-      if (val > 894) app.sockets.emit('message', { key: 'button'}) 
+      if (val > 890) app.sockets.emit('message', { key: 'button'}) 
     });
 
   })
 })
 
-
-function convertRange(val, old_min, old_max, new_min, new_max) {
- return Math.round((((val - old_min) * (new_max - new_min) ) / (old_max - old_min)) + new_min)
-}
