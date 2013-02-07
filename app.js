@@ -8,44 +8,42 @@ app.route('/*').files(__dirname + '/client');
 
 app.httpServer.listen(8000)
 
-var five = require("johnny-five")
+app.sockets.on('connection', function (socket) {
 
-var board = new five.Board();
-var freq = 20
+var joystick = new (require('joystick'))(0, 3500, 350);
 
-board.on("ready", function() {
+var freq = 10
+var x = null
+var y = null
 
-  app.sockets.on('connection', function (socket) {
+var joystick = new (require('joystick'))(0, 3500, 350);
 
-    joy1 = new five.Sensor({
-      pin: "A0"
-      , freq: freq
-    });
+joystick.on('axis', function(data){
 
-    joy2 = new five.Sensor({
-      pin: "A1"
-      , freq: freq
-    });
+  if (data.number == 0 && data.value == -32767) {
+    x = 'left'
+  } 
+  if (data.number == 0 && data.value == 32767) {
+    x = 'right'
+  } 
+  if (data.number == 0 && data.value == 0) {
+    x = null
+  } 
+  if (data.number == 1 && data.value == -32767) {
+    y = 'up'
+  } 
+  if (data.number == 1 && data.value == 32767) {
+    y = 'down'
+  } 
+  if (data.number == 1 && data.value == 0) {
+    y = null
+  } 
 
-    button1 = new five.Sensor({
-      pin: "A2"
-      , freq: freq
-    });    
-  
-    joy1.on("read", function(err, val) {
-      if (val < 20) app.sockets.emit('message', { key: 'up'}) 
-      if (val > 860) app.sockets.emit('message', { key: 'down'}) 
-    });
-
-    joy2.on("read", function(err, val) {
-      if (val < 20) app.sockets.emit('message', { key: 'left'})  
-      if (val > 860) app.sockets.emit('message', { key: 'right'}) 
-    });
-
-    button1.on("read", function(err, val) {
-      if (val > 890) app.sockets.emit('message', { key: 'button'}) 
-    });
-
-  })
 })
 
+var poll = setInterval(function() {
+  if (x) app.sockets.emit('message', { key: x}) 
+  if (y) app.sockets.emit('message', { key: y}) 
+}, freq)
+
+})
