@@ -101,15 +101,15 @@ this.setup = function() {
    
    // Looking for keyboard or joystick presses
    
-   if(jaws.pressed("left") || jaws.socket == 'left')  { player.vx = -2 }
-   if(jaws.pressed("right") || jaws.socket == 'right') { player.vx = 2; }
-   if(jaws.pressed("up") || jaws.socket == 'up') { player.vy = -6 }
-   if(jaws.pressed("down") || jaws.socket == 'down') { player.vy = 2; }
+   if(jaws.pressed("left") || jaws.socket == 'left')  { player.vx = -5 }
+   if(jaws.pressed("right") || jaws.socket == 'right') { player.vx = 5; }
+   if(jaws.pressed("up") || jaws.socket == 'up') { player.vy = -10 }
+   if(jaws.pressed("down") || jaws.socket == 'down') { player.vy = 5; }
    jaws.socket = null
    
    // If nothing pressed, add some gravity to player
    
-   player.vy = player.vy + 3   
+   player.vy = player.vy + 5  
    player.move()
    
    viewport.centerAround(player)
