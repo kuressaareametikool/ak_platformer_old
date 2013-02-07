@@ -1,9 +1,14 @@
 
+// Passing joystick commands from server to client
+
 var socket = io.connect();
 
 socket.on('message', function (data) {
   jaws.socket = data.key
 });
+
+
+// Main game function
 
 function playState() {
 
@@ -20,15 +25,15 @@ this.setup = function() {
     map: [
 
   0,0,0,0,0,0,0,0,0,0,
-  0,0,0,1,1,0,0,0,0,3,
-  3,0,0,0,0,0,0,0,0,1,
-  1,1,0,0,0,1,0,0,1,2,
+  0,0,0,1,1,0,0,0,0,2,
+  2,0,0,0,0,0,0,0,0,1,
+  1,1,0,0,0,1,0,0,1,1,
   0,0,0,0,0,0,0,0,0,0,
   0,0,0,0,0,0,1,0,0,0,
   0,0,0,0,0,0,0,0,0,0,
   1,1,1,1,1,1,1,1,1,1,  
-  2,2,2,2,2,2,2,2,2,2,  
-  2,2,2,2,2,2,2,2,2,2  
+  1,1,1,1,1,1,1,1,1,1,  
+  1,1,1,1,1,1,1,1,1,1  
 
   ]}
 
@@ -38,23 +43,19 @@ this.setup = function() {
     0 : {
     },
     1 : {
-      'image': 'images/earth_1.png',
+      'image': 'images/black.png',
       'layer': 'walls'
     },
     2 : {
-      'image': 'images/earth_2.png',
-      'layer': 'walls'
-    },
-    3 : {
-      'image': 'images/mushroom.png',
-      'layer': 'collectables'      
+      'image': 'images/gray.png',
+      'layer': 'items'      
     }
   }
   
   // Tilemap
   
    walls = new jaws.TileMap({size: [100,100], cell_size: [32,32]})
-   collectables = new jaws.TileMap({size: [100,100], cell_size: [32,32]})
+   items = new jaws.TileMap({size: [100,100], cell_size: [32,32]})
   
   // Filling tilemap
   
@@ -74,7 +75,7 @@ this.setup = function() {
    
    // Player
    
-   this.player = new jaws.Sprite({image: "images/cat.png", x: 70, y: 30, anchor: "center"})
+   this.player = new jaws.Sprite({image: "images/red.png", x: 70, y: 30, anchor: "center"})
    
    player.vx = 0
    player.vy = 0
@@ -123,7 +124,7 @@ this.setup = function() {
      walls.all().forEach(function(tile) {
        tile.draw()
      })
-     collectables.all().forEach(function(tile) {
+     items.all().forEach(function(tile) {
        tile.draw()
      })
      player.draw()
